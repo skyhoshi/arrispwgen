@@ -1,4 +1,6 @@
-import {TABLE1, TABLE2} from './constants';
+import {TABLE1, TABLE2, ALPHANUM} from './constants';
+
+const modulus = ALPHANUM.length;
 
 export function list1(date) {
     // Last two digits of the year
@@ -25,12 +27,12 @@ export function list1(date) {
     list1[5] = day_of_month;
 
     if (((year + month) - day_of_month) < 0) {
-        list1[6] = (((year + month) - day_of_month) + 36) % 36;
+        list1[6] = (((year + month) - day_of_month) + modulus) % modulus;
     } else {
-        list1[6] = ((year + month) - day_of_month) % 36;
+        list1[6] = ((year + month) - day_of_month) % modulus;
     }
 
-    list1[7] = (((3 + ((year + month) % 12)) * day_of_month) % 37) % 36;
+    list1[7] = (((3 + ((year + month) % 12)) * day_of_month) % 37) % modulus;
 
     return list1;
 }
@@ -39,7 +41,7 @@ export function list2(seed) {
     let list2 = [];
 
     for (let i = 0; i <= 7; i++) {
-        list2[i] = (seed.charCodeAt(i)) % 36;
+        list2[i] = (seed.charCodeAt(i)) % modulus;
     }
 
     return list2;
@@ -53,11 +55,10 @@ export function list3(l1, l2) {
     let list3 = [];
 
     for (let i = 0; i <= 7; i++) {
-        list3[i] = (((l1[i] + l2[i])) % 36);
+        list3[i] = (((l1[i] + l2[i])) % modulus);
     }
 
-    list3[8] = (list3[0] + list3[1] + list3[2] + list3[3] + list3[4] +
-        list3[5] + list3[6] + list3[7]) % 36;
+    list3[8] = (list3.reduce((a, b) => { return a + b; }, 0)) % modulus;
 
     list3[9] = Math.round(Math.pow(num8(list3), 2));
 
@@ -78,7 +79,7 @@ export function list5(seed, l4) {
     let list5 = [];
 
     for (let i = 0; i <= 9; i++) {
-        list5[i] = (seed.charCodeAt(i) + l4[i]) % 36;
+        list5[i] = (seed.charCodeAt(i) + l4[i]) % modulus;
     }
 
     return list5;
