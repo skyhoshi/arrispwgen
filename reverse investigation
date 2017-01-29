@@ -1,0 +1,57 @@
+ALPHANUM         = [0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  | A,  B,  C,  D,  E,  F,  G,  H,  I,  J,  K,  L,  M,  N,  O,  P,  Q,  R,  S,  T,  U,  V,  W,  X,  Y,  Z]
+alpha_char_codes = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, | 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90]
+
+seed             = [M,  P,  S,  J,  K,  M,  D,  H,  A,  I]
+seed_char_codes  = [77, 80, 83, 74, 75, 77, 68, 72, 65, 73]
+
+seed_modulus     = [5,  8,  11, 2,  3,  5,  32, 0]
+
+
+## Reversing the modulus
+
+Numbers:
+
+0: 48 % 36 = 12 == 48 - 36
+1: 49 % 36 = 13 == 49 - 36
+2: 50 % 36 = 14 == 50 - 36
+9: 57 % 36 = 21 == 57 - 36
+
+Letters:
+A: 65 % 36 = 29 == 65 - 36
+F: 70 % 36 = 34 == 70 - 36
+G: 71 % 36 = 35 == 71 - 36 # From here on start subtracting double: 72 instead of 36
+H: 72 % 36 = 0  == 72 - 72
+M: 77 % 36 = 5  == 77 - 72
+P: 80 % 36 = 8  == 80 - 72
+S: 83 % 36 = 11 == 83 - 72
+Z: 90 % 36 = 18 == 90 - 72
+
+
+This is the equation we need to crack:
+
+list5[i] = (seed.charCodeAt(i) + l4[i]) % modulus;
+
+or
+
+A = (X + Y) % 36
+
+WE know A but not X or Y:
+- A is the character from the password for the current iteration.
+- Y is a value calculated for that position when the password is generated.
+- X is the seed character at the same position as the position of the password character of the current iteration.
+
+Possible values for A and Y:
+0 <= 35
+
+Possible values for X:
+48 <= X <= 57 || 65 <= X <= 90
+
+Total possible values for X + Y = 36 * 36 = 1296
+
+Is it possible that two different X and Y have the same modulus? Yes. And this screws everything.
+
+
+
+
+['1', '9', 'A', 'G', 'H', 'M', 'R'].map(function (e) { return e.toString().charCodeAt(0) % 36; });
+[ 13,  21,  29,  35,  0,   5,   10]
